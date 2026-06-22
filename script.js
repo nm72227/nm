@@ -1,2431 +1,496 @@
-```javascript
-/* ==========================================================
-   TOUQAS FOODS
-   script.js
-   PART 3A
-
-   FEATURES INCLUDED
-   -----------------
-   ✓ Loader
-   ✓ AOS Initialization
-   ✓ Mobile Menu
-   ✓ Smooth Scroll
-   ✓ Active Navbar Links
-   ✓ Back To Top Button
-   ✓ Structured Menu Data
-   ✓ Dynamic Menu Rendering
-   ✓ Category Filtering
-   ✓ WhatsApp Order Buttons
-
-   WhatsApp Number:
-   03079308372
-   International Format:
-   923079308372
-
-   NEXT:
-   Part 3B = Cart System
-========================================================== */
-
-/* ==========================================================
-   GLOBAL VARIABLES
-========================================================== */
-
-const WHATSAPP_NUMBER = "923079308372";
-
-const menuGrid = document.getElementById("menuGrid");
-const tabButtons = document.querySelectorAll(".tab-btn");
-
-/* ==========================================================
-   LOADER
-========================================================== */
-
-window.addEventListener("load", () => {
-
-    const loader = document.getElementById("loader");
-
-    if (loader) {
-
-        setTimeout(() => {
-
-            loader.style.opacity = "0";
-
-            setTimeout(() => {
-
-                loader.style.display = "none";
-
-            }, 500);
-
-        }, 1000);
-    }
-
-});
-
-/* ==========================================================
-   AOS ANIMATION
-========================================================== */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    if (typeof AOS !== "undefined") {
-
-        AOS.init({
-
-            duration: 900,
-            once: true,
-            offset: 80
-
-        });
-    }
-
-});
-
-/* ==========================================================
-   MOBILE MENU
-========================================================== */
-
-const menuToggle = document.getElementById("menuToggle");
-const navLinks = document.getElementById("navLinks");
-
-if (menuToggle && navLinks) {
-
-    menuToggle.addEventListener("click", () => {
-
-        navLinks.classList.toggle("active");
-
-    });
-
-    document.querySelectorAll(".nav-links a")
-        .forEach(link => {
-
-            link.addEventListener("click", () => {
-
-                navLinks.classList.remove("active");
-
-            });
-
-        });
-}
-
-/* ==========================================================
-   SMOOTH SCROLL
-========================================================== */
-
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-
-    anchor.addEventListener("click", function (e) {
-
-        const target = document.querySelector(
-            this.getAttribute("href")
-        );
-
-        if (!target) return;
-
-        e.preventDefault();
-
-        target.scrollIntoView({
-
-            behavior: "smooth",
-            block: "start"
-
-        });
-
-    });
-
-});
-
-/* ==========================================================
-   ACTIVE NAVIGATION HIGHLIGHT
-========================================================== */
-
-const sections = document.querySelectorAll("section[id]");
-const navItems = document.querySelectorAll(".nav-links a");
-
-window.addEventListener("scroll", () => {
-
-    let current = "";
-
-    sections.forEach(section => {
-
-        const sectionTop = section.offsetTop - 180;
-
-        if (window.scrollY >= sectionTop) {
-
-            current = section.getAttribute("id");
-
-        }
-
-    });
-
-    navItems.forEach(link => {
-
-        link.classList.remove("active-link");
-
-        if (
-            link.getAttribute("href") === `#${current}`
-        ) {
-
-            link.classList.add("active-link");
-
-        }
-
-    });
-
-});
-
-/* ==========================================================
-   BACK TO TOP BUTTON
-========================================================== */
-
-const backToTop =
-    document.getElementById("backToTop");
-
-window.addEventListener("scroll", () => {
-
-    if (!backToTop) return;
-
-    if (window.scrollY > 500) {
-
-        backToTop.classList.add("show");
-
-    } else {
-
-        backToTop.classList.remove("show");
-
-    }
-
-});
-
-if (backToTop) {
-
-    backToTop.addEventListener("click", () => {
-
-        window.scrollTo({
-
-            top: 0,
-            behavior: "smooth"
-
-        });
-
-    });
-
-}
-
-/* ==========================================================
-   MENU DATA
-========================================================== */
-
-/*
-   IMAGE PLACEHOLDERS
-
-   Replace later with your own images:
-
-   images/momos/chicken-steamed.jpg
-   images/burgers/classic-beef.jpg
-   images/pizza/tikka.jpg
-   etc.
-*/
-
-const menuItems = [
-
-    /* ======================================================
-       MOMOS
-    ====================================================== */
-
-    {
-        id: 1,
-        name: "Chicken Steamed Momos",
-        category: "momos",
-        price: 650,
-        image: "images/menu/chicken-steamed-momos.jpg",
-        description:
-            "Soft steamed dumplings stuffed with juicy chicken filling.",
-        badge: "Best Seller",
-        availability: true
-    },
-
-    {
-        id: 2,
-        name: "Chicken Fried Momos",
-        category: "momos",
-        price: 750,
-        image: "images/menu/chicken-fried-momos.jpg",
-        description:
-            "Crispy fried momos with signature dipping sauce.",
-        badge: "Popular",
-        availability: true
-    },
-
-    {
-        id: 3,
-        name: "Cheese Momos",
-        category: "momos",
-        price: 850,
-        image: "images/menu/cheese-momos.jpg",
-        description:
-            "Cheesy and creamy filling with delicious flavor.",
-        badge: "Cheesy",
-        availability: true
-    },
-
-    {
-        id: 4,
-        name: "Tandoori Momos",
-        category: "momos",
-        price: 950,
-        image: "images/menu/tandoori-momos.jpg",
-        description:
-            "Char-grilled tandoori style momos with spices.",
-        badge: "Signature",
-        availability: true
-    },
-
-    {
-        id: 5,
-        name: "Beef Momos",
-        category: "momos",
-        price: 850,
-        image: "images/menu/beef-momos.jpg",
-        description:
-            "Tender beef filling wrapped in handmade dumplings.",
-        badge: "Premium",
-        availability: true
-    },
-
-    {
-        id: 6,
-        name: "Schezwan Momos",
-        category: "momos",
-        price: 900,
-        image: "images/menu/schezwan-momos.jpg",
-        description:
-            "Spicy schezwan flavor for heat lovers.",
-        badge: "Spicy",
-        availability: true
-    },
-
-    {
-        id: 7,
-        name: "Jhol Momos",
-        category: "momos",
-        price: 950,
-        image: "images/menu/jhol-momos.jpg",
-        description:
-            "Nepalese style momos served in flavorful soup.",
-        badge: "Special",
-        availability: true
-    },
-
-    {
-        id: 8,
-        name: "Veg Momos",
-        category: "momos",
-        price: 550,
-        image: "images/menu/veg-momos.jpg",
-        description:
-            "Fresh vegetable filling with authentic taste.",
-        badge: "Veg",
-        availability: true
-    },
-
-    /* ======================================================
-       BURGERS
-    ====================================================== */
-
-    {
-        id: 9,
-        name: "Classic Beef Burger",
-        category: "burgers",
-        price: 650,
-        image: "images/menu/classic-beef-burger.jpg",
-        description:
-            "Juicy beef patty with lettuce and signature sauce.",
-        badge: "Classic",
-        availability: true
-    },
-
-    {
-        id: 10,
-        name: "Double Beef Burger",
-        category: "burgers",
-        price: 950,
-        image: "images/menu/double-beef-burger.jpg",
-        description:
-            "Double beef patties for extra satisfaction.",
-        badge: "Double",
-        availability: true
-    },
-
-    {
-        id: 11,
-        name: "Cheese Beef Burger",
-        category: "burgers",
-        price: 850,
-        image: "images/menu/cheese-beef-burger.jpg",
-        description:
-            "Loaded with premium cheese and beef.",
-        badge: "Cheese",
-        availability: true
-    },
-
-    {
-        id: 12,
-        name: "Signature Burger",
-        category: "burgers",
-        price: 1100,
-        image: "images/menu/signature-burger.jpg",
-        description:
-            "The ultimate Touqas Foods burger experience.",
-        badge: "Signature",
-        availability: true
-    },
-
-    /* ======================================================
-       FRIES
-    ====================================================== */
-
-    {
-        id: 13,
-        name: "Regular Fries",
-        category: "fries",
-        price: 250,
-        image: "images/menu/regular-fries.jpg",
-        description:
-            "Golden crispy fries served fresh.",
-        badge: "Fresh",
-        availability: true
-    },
-
-    {
-        id: 14,
-        name: "Masala Fries",
-        category: "fries",
-        price: 350,
-        image: "images/menu/masala-fries.jpg",
-        description:
-            "Seasoned fries with special masala blend.",
-        badge: "Spicy",
-        availability: true
-    },
-
-    {
-        id: 15,
-        name: "Cheese Fries",
-        category: "fries",
-        price: 550,
-        image: "images/menu/cheese-fries.jpg",
-        description:
-            "Loaded with creamy melted cheese.",
-        badge: "Cheesy",
-        availability: true
-    },
-
-    {
-        id: 16,
-        name: "Loaded Fries",
-        category: "fries",
-        price: 750,
-        image: "images/menu/loaded-fries.jpg",
-        description:
-            "Premium toppings and sauces over crispy fries.",
-        badge: "Best Seller",
-        availability: true
-    },
-
-    /* ======================================================
-       PIZZA
-    ====================================================== */
-
-    {
-        id: 17,
-        name: "Chicken Tikka Pizza",
-        category: "pizza",
-        price: 1400,
-        image: "images/menu/chicken-tikka-pizza.jpg",
-        description:
-            "Pakistani favorite topped with chicken tikka.",
-        badge: "Popular",
-        availability: true
-    },
-
-    {
-        id: 18,
-        name: "Fajita Pizza",
-        category: "pizza",
-        price: 1450,
-        image: "images/menu/fajita-pizza.jpg",
-        description:
-            "Smoky fajita flavor with premium toppings.",
-        badge: "Hot",
-        availability: true
-    },
-
-    {
-        id: 19,
-        name: "Cheese Lover Pizza",
-        category: "pizza",
-        price: 1550,
-        image: "images/menu/cheese-lover-pizza.jpg",
-        description:
-            "Extra cheese for ultimate indulgence.",
-        badge: "Cheese",
-        availability: true
-    },
-
-    {
-        id: 20,
-        name: "Kabab Crust Pizza",
-        category: "pizza",
-        price: 1650,
-        image: "images/menu/kabab-crust-pizza.jpg",
-        description:
-            "Stuffed crust and delicious kabab topping.",
-        badge: "Premium",
-        availability: true
-    },
-
-    {
-        id: 21,
-        name: "Special Touqas Pizza",
-        category: "pizza",
-        price: 1850,
-        image: "images/menu/special-touqas-pizza.jpg",
-        description:
-            "House special pizza loaded with flavor.",
-        badge: "Signature",
-        availability: true
-    }
-
+/**
+ * ==========================================================================
+ * TOUQAS FOODS EMBEDDED ENGINE SYSTEM OPERATIONAL CONTRACT 
+ * ==========================================================================
+ */
+
+// COMPANY METADATA DIRECT CONFIGURATION
+const SYSTEM_CONFIG = {
+    WHATSAPP_PRIMARY_DESTINATION: "923079308372", // Format without symbols
+    DELIVERY_FEE_PKR: 150,
+    LOYALTY_POINT_REWARD_SPEND_MIN: 200, // 1 Point per 200 PKR
+    LOYALTY_POINT_PKR_VALUE: 10,         // 1 Point = 10 PKR
+    LOYALTY_MIN_REDEMPTION_THRESHOLD: 100
+};
+
+// 16. COMPREHENSIVE REUSABLE DATA STRUCTURE MENU ARRAYS
+const TOUQAS_MENU_DATABASE = [
+    // A) SIGNATURE MOMOS
+    { id: "momo-1", name: "Chicken Steamed Momos", category: "signature-momos", price: 650, badge: "Best Seller", desc: "Hand-folded dumplings packed with juicy minced chicken seasoning and aromatic spices.", img: "momo-steamed.jpg" },
+    { id: "momo-2", name: "Chicken Fried Momos", category: "signature-momos", price: 700, badge: "Hot", desc: "Crisp golden outer skin yielding to savory chicken distribution fillings.", img: "momo-fried.jpg" },
+    { id: "momo-3", name: "Cheese Momos", category: "signature-momos", price: 850, badge: "Premium", desc: "Decadent melting mozzarella cheese blend loaded into hot tender chicken casings.", img: "momo-cheese.jpg" },
+    { id: "momo-4", name: "Tandoori Momos", category: "signature-momos", price: 780, badge: "Smoked", desc: "Char-grilled clay oven momos marinated in deep traditional spiced yogurt marinades.", img: "momo-tandoori.jpg" },
+    { id: "momo-5", name: "Beef Momos", category: "signature-momos", price: 890, badge: "Chef Special", desc: "Hearty, slow-cooked premium beef mince with fresh scallions and cilantro infusions.", img: "momo-beef.jpg" },
+    { id: "momo-6", name: "Schezwan Momos", category: "signature-momos", price: 750, badge: "Spicy", desc: "Tossed inside high-flame woks loaded with blazing hot garlic Schezwan sauce formulas.", img: "momo-schezwan.jpg" },
+    { id: "momo-7", name: "Jhol Momos", category: "signature-momos", price: 800, badge: "Trending", desc: "Steamed units served swimming inside a signature cold spiced tomato-peanut soup broth.", img: "momo-jhol.jpg" },
+    { id: "momo-8", name: "Veg Momos", category: "signature-momos", price: 550, badge: "Healthy", desc: "Finely shredded garden fresh cabbage, carrots, and mushrooms crisp profiles.", img: "momo-veg.jpg" },
+
+    // B) PREMIUM BURGERS
+    { id: "brg-1", name: "Classic Beef Burger", category: "premium-burgers", price: 750, badge: "Classic", desc: "Smash-grilled 100% prime beef patty layered with burger sauce on brioche.", img: "brg-classic.jpg" },
+    { id: "brg-2", name: "Double Beef Burger", category: "premium-burgers", price: 1150, badge: "Monster Stack", desc: "Two premium heavy smash patties double stacked with double cheddar melt cheese layers.", img: "brg-double.jpg" },
+    { id: "brg-3", name: "Cheese Beef Burger", category: "premium-burgers", price: 850, badge: "Cheesy", desc: "Juicy beef patty injected with cheddar cream sauce variables and sweet pickles.", img: "brg-cheese.jpg" },
+    { id: "brg-4", name: "Signature Burger", category: "premium-burgers", price: 950, badge: "Exclusive", desc: "Premium house-cut meat slice topped with crisp onion rings, secret recipe Touqas glazes.", img: "brg-sig.jpg" },
+
+    // C) LOADED FRIES
+    { id: "fr-1", name: "Regular Fries", category: "loaded-fries", price: 300, badge: "Crisp", desc: "Perfect golden straight cut potatoes sprinkled with sea salt flakes.", img: "fr-reg.jpg" },
+    { id: "fr-2", name: "Masala Fries", category: "loaded-fries", price: 350, badge: "Spicy Local", desc: "Tossed uniformly in hot local red chili spice formulas and lime zest hints.", img: "fr-masala.jpg" },
+    { id: "fr-3", name: "Cheese Fries", category: "loaded-fries", price: 500, badge: "Melting", desc: "Drowned thoroughly under hot fluid rich cheese cheddar sauce streams.", img: "fr-cheese.jpg" },
+    { id: "fr-4", name: "Loaded Fries", category: "loaded-fries", price: 750, badge: "Heavy Weight", desc: "Crisp base fries stacked under pulled chicken bits, jalapeños, olives, and premium sauces.", img: "fr-loaded.jpg" },
+
+    // D) PIZZA LINE
+    { id: "pz-1", name: "Chicken Tikka Pizza", category: "pizza-line", price: 1250, badge: "Local Favorite", desc: "Spiced tandoori tikka chunks, red onions, and hand-stretched cheese crust layers.", img: "pz-tikka.jpg" },
+    { id: "pz-2", name: "Fajita Pizza", category: "pizza-line", price: 1250, badge: "Classic", desc: "Smoked fajita chicken matrix accompanied by colorful bell peppers and sweet corn.", img: "pz-fajita.jpg" },
+    { id: "pz-3", name: "Cheese Lover Pizza", category: "pizza-line", price: 1100, badge: "Pure Cheese", desc: "Thick layer blend of premium dynamic mozzarella, cheddar, and parmesan blankets.", img: "pz-cheese.jpg" },
+    { id: "pz-4", name: "Kabab Crust Pizza", category: "pizza-line", price: 1550, badge: "Stuffed Edge", desc: "Outer perimeter crust rings fully stuffed with tender charcoal seekh kabab loops.", img: "pz-kabab.jpg" },
+    { id: "pz-5", name: "Special Touqas Pizza", category: "pizza-line", price: 1700, badge: "Luxury Chef", desc: "Loaded supreme matrix displaying every meat signature, mushrooms, and double layers.", img: "pz-special.jpg" },
+
+    // E) INJECTED BROAST
+    { id: "brst-1", name: "Single Piece Broast", category: "injected-broast", price: 400, badge: "Snack Piece", desc: "Deep pressure fried chicken quarter saturated uniformly with inside spice liquids.", img: "brst-single.jpg" },
+    { id: "brst-2", name: "Full Broast Meal", category: "injected-broast", price: 1450, badge: "Family Box", desc: "4 golden pressure crunch pieces served with dinner rolls, premium garlic mayo dip, fries.", img: "brst-full.jpg" },
+    { id: "brst-3", name: "Spicy Injected Broast", category: "injected-broast", price: 450, badge: "Extreme Hot", desc: "Core saturation level vector utilizing ghost pepper infused spice liquids.", img: "brst-spicy.jpg" },
+
+    // F) COMBO DEALS
+    { id: "cmb-1", name: "Burger + Fries + Drink", category: "combo-deals", price: 990, badge: "Solo Winner", desc: "Classic Burger, matching standard side line fries, and 350ml cold drink can.", img: "cmb-1.jpg" },
+    { id: "cmb-2", name: "Pizza Slice Combo", category: "combo-deals", price: 650, badge: "Quick Lunch", desc: "Giant deep pan premium pizza slice, regular crispy masala fries, and a soft drink.", img: "cmb-2.jpg" },
+    { id: "cmb-3", name: "Momos + Drink Combo", category: "combo-deals", price: 790, badge: "Momo Mania", desc: "6 pieces of Chicken Steamed Momos served alongside an icy mint margarita glass.", img: "cmb-3.jpg" },
+    { id: "cmb-4", name: "Family Combo", category: "combo-deals", price: 3490, badge: "Mega Pack", desc: "1 Large Pizza, 2 Classic Burgers, 1 Full Broast Meal, and a 1.5 Litre Soft Drink.", img: "cmb-4.jpg" },
+    { id: "cmb-5", name: "Friends Combo", category: "combo-deals", price: 2100, badge: "Hangout Pack", desc: "12 Mixed variety Momos, 2 Loaded Fries arrays, and 3 individual cold coffees.", img: "cmb-5.jpg" },
+    { id: "cmb-6", name: "Broast Combo", category: "combo-deals", price: 950, badge: "Crunch Pack", desc: "2 Pieces of injected broast, large portion fries, garlic buns, and carbonated drink.", img: "cmb-6.jpg" },
+
+    // G) DRINKS
+    { id: "drk-1", name: "Soft Drinks", category: "drinks", price: 120, badge: "Chilled", desc: "Selection of cold carbonated choice cans (Pepsi, Coke, Sprite).", img: "drk-soft.jpg" },
+    { id: "drk-2", name: "Mineral Water", category: "drinks", price: 80, badge: "Pure", desc: "Premium purified clean bottled drinking water.", img: "drk-water.jpg" },
+    { id: "drk-3", name: "Mint Margarita", category: "drinks", price: 280, badge: "Fresh", desc: "Crushed fresh mint leaves, lemon blends, blended ice crystal fields.", img: "drk-mint.jpg" },
+    { id: "drk-4", name: "Fresh Lime", category: "drinks", price: 180, badge: "Zesty", desc: "Chilled clear soda splash combined with fresh lime extractions.", img: "drk-lime.jpg" },
+    { id: "drk-5", name: "Cold Coffee", category: "drinks", price: 450, badge: "Creamy", desc: "Espresso shots whipped thick with sweet ice cream and chocolate syrups.", img: "drk-coffee.jpg" }
 ];
 
-/* ==========================================================
-   RENDER MENU
-========================================================== */
+const UPCOMING_DISHES_DATABASE = [
+    { name: "Korean Wings", desc: "Glazed in extra sticky sweet honey-gochujang pastes." },
+    { name: "Pasta Bowls", desc: "Rich white alfredo sheets baked with parmesan caps." },
+    { name: "Loaded Shawarma Fries", desc: "Middle eastern chicken shreds overlaid on fries." },
+    { name: "Special Wraps", desc: "Flatbread matrices packing crispy broast strip lines." },
+    { name: "Dessert Cups", desc: "Layers of velvety dark chocolate ganache cake structures." }
+];
 
-function renderMenu(category = "all") {
+const CATEGORY_MAP = {
+    "all": "All Matrix Items",
+    "signature-momos": "Signature Momos",
+    "premium-burgers": "Premium Burgers",
+    "loaded-fries": "Loaded Fries",
+    "pizza-line": "Pizza Line",
+    "injected-broast": "Injected Broast",
+    "combo-deals": "Combo Deals",
+    "drinks": "Beverages"
+};
 
-    if (!menuGrid) return;
+// INTERNAL MEMORY ENGINE CLIENT APP STATES
+let APPLICATION_SHOPPING_CART = [];
+let CURRENT_ACTIVE_CATEGORY = "all";
+let ACTIVE_APPLIED_LOYALTY_DISCOUNT = 0;
 
-    let filteredItems = menuItems;
+/**
+ * CORE EXECUTION ANCHOR ON DOM CONTENT READY
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    initializeUINavigationInteractions();
+    renderMenuCategoryTabs();
+    renderFoodMenuCards();
+    renderUpcomingDishesSection();
+});
 
-    if (category !== "all") {
+/**
+ * UI INTERACTIONS / SCROLLS / OVERLAYS CONTROLLERS
+ */
+function initializeUINavigationInteractions() {
+    const hamburger = document.getElementById("hamburgerMenu");
+    const navLinks = document.getElementById("navLinks");
+    const cartTrigger = document.getElementById("cartTrigger");
+    const cartDrawer = document.getElementById("cartDrawer");
+    const closeCart = document.getElementById("closeCart");
+    const cartOverlay = document.getElementById("cartOverlay");
+    const backToTopBtn = document.getElementById("backToTopBtn");
+    const clearCartBtn = document.getElementById("clearCartBtn");
+    const proceedToCheckoutBtn = document.getElementById("proceedToCheckoutBtn");
+    const backToMenuBtn = document.getElementById("backToMenuBtn");
+    const placeOrderFinalBtn = document.getElementById("placeOrderFinalBtn");
+    const applyLoyaltyBtn = document.getElementById("applyLoyaltyBtn");
 
-        filteredItems =
-            menuItems.filter(
-                item => item.category === category
-            );
-    }
+    // Hamburger Mobile Opening Toggles
+    hamburger.addEventListener("click", () => navLinks.classList.toggle("active"));
+    
+    // Close mobile nav when link clicked
+    document.querySelectorAll(".nav-links a").forEach(link => {
+        link.addEventListener("click", (e) => {
+            document.querySelectorAll(".nav-links a").forEach(l => l.classList.remove("active"));
+            e.target.classList.add("active");
+            navLinks.classList.remove("active");
+        });
+    });
 
-    menuGrid.innerHTML = "";
+    // Cart Panel Triggers
+    cartTrigger.addEventListener("click", () => cartDrawer.classList.add("active"));
+    closeCart.addEventListener("click", () => cartDrawer.classList.remove("active"));
+    cartOverlay.addEventListener("click", () => cartDrawer.classList.remove("active"));
 
-    filteredItems.forEach(item => {
+    // Back to top appearance threshold monitoring
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 400) {
+            backToTopBtn.classList.add("visible");
+        } else {
+            backToTopBtn.classList.remove("visible");
+        }
+    });
+    backToTopBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 
-        menuGrid.innerHTML += `
+    // Cart Core Actions Hooks
+    clearCartBtn.addEventListener("click", () => {
+        APPLICATION_SHOPPING_CART = [];
+        syncCartStateToUserInterface();
+    });
 
-        <div class="menu-card"
-             data-aos="fade-up">
+    proceedToCheckoutBtn.addEventListener("click", () => {
+        cartDrawer.classList.remove("active");
+        document.getElementById("checkout").classList.remove("hidden");
+        document.getElementById("checkout").scrollIntoView({ behavior: "smooth" });
+    });
 
-            <div class="menu-image">
+    backToMenuBtn.addEventListener("click", () => {
+        document.getElementById("checkout").classList.add("hidden");
+        document.getElementById("menu").scrollIntoView({ behavior: "smooth" });
+    });
 
-                <img
-                    src="${item.image}"
-                    alt="${item.name}">
+    // Loyalty Redemption Application Hook
+    applyLoyaltyBtn.addEventListener("click", executeLoyaltyLedgerValidation);
 
-                <span class="food-badge">
-                    ${item.badge}
-                </span>
+    // Final Process Launch
+    placeOrderFinalBtn.addEventListener("click", processingECommerceCheckoutTransmission);
+}
 
+/**
+ * DYNAMIC DOM GENERATION: CATEGORIES TAB INTERFACE
+ */
+function renderMenuCategoryTabs() {
+    const container = document.getElementById("menuCategoriesContainer");
+    container.innerHTML = "";
+    
+    Object.keys(CATEGORY_MAP).forEach(key => {
+        const btn = document.createElement("button");
+        btn.className = `category-tab ${key === CURRENT_ACTIVE_CATEGORY ? 'active' : ''}`;
+        btn.textContent = CATEGORY_MAP[key];
+        btn.setAttribute("data-cat-id", key);
+        
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".category-tab").forEach(t => t.classList.remove("active"));
+            btn.classList.add("active");
+            CURRENT_ACTIVE_CATEGORY = key;
+            renderFoodMenuCards();
+        });
+        
+        container.appendChild(btn);
+    });
+}
+
+/**
+ * DYNAMIC DOM GENERATION: PRODUCTS AND MENU GRID CARDS ENGINE
+ */
+function renderFoodMenuCards() {
+    const grid = document.getElementById("productsGrid");
+    grid.innerHTML = "";
+    
+    const filteredDataset = CURRENT_ACTIVE_CATEGORY === "all" 
+        ? TOUQAS_MENU_DATABASE 
+        : TOUQAS_MENU_DATABASE.filter(item => item.category === CURRENT_ACTIVE_CATEGORY);
+        
+    filteredDataset.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+        
+        card.innerHTML = `
+            <div class="product-img-box">
+                <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=400&auto=format&fit=crop'">
+                ${item.badge ? `<span class="product-tag-badge">${item.badge}</span>` : ''}
             </div>
-
-            <div class="menu-content">
-
+            <div class="product-card-body">
                 <h3>${item.name}</h3>
-
-                <p>${item.description}</p>
-
-                <div class="food-price">
-
-                    <span>
-                        PKR ${item.price}
-                    </span>
-
+                <p class="product-desc">${item.desc}</p>
+                <div class="product-price-row">
+                    <span class="price-lbl">Price Level</span>
+                    <span class="price-val">PKR ${item.price}</span>
                 </div>
-
-                <div class="menu-actions">
-
-                    <button
-                        class="add-cart-btn"
-                        data-id="${item.id}">
-
-                        Add To Cart
-
-                    </button>
-
-                    <a
-                      class="whatsapp-btn"
-                      target="_blank"
-                      href="${generateWhatsAppLink(item)}">
-
-                        WhatsApp Order
-
+                <div class="product-action-btns">
+                    <button class="btn-add-cart" onclick="executeAddToCartRoutine('${item.id}')"><i class="fa-solid fa-cart-plus"></i> Add Basket</button>
+                    <a class="btn-wa-direct" target="_blank" href="https://wa.me/${SYSTEM_CONFIG.WHATSAPP_PRIMARY_DESTINATION}?text=${encodeURIComponent(`Salam! I want to order single item directly: ${item.name} (Qty: 1) from Touqas Foods.`)}">
+                        <i class="fa-brands fa-whatsapp"></i> Quick Buy
                     </a>
-
                 </div>
-
             </div>
-
-        </div>
-
         `;
+        grid.appendChild(card);
     });
-
 }
 
-/* ==========================================================
-   WHATSAPP MESSAGE
-========================================================== */
-
-function generateWhatsAppLink(item) {
-
-    const message =
-
-`Hello TOUQAS FOODS,
-
-I want to place an order.
-
-Item: ${item.name}
-Price: PKR ${item.price}
-
-Please confirm availability.
-
-Thank you.`;
-
-    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-}
-
-/* ==========================================================
-   CATEGORY FILTERING
-========================================================== */
-
-tabButtons.forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        tabButtons.forEach(btn => {
-
-            btn.classList.remove("active");
-
-        });
-
-        button.classList.add("active");
-
-        const category =
-            button.dataset.category;
-
-        renderMenu(category);
-
+/**
+ * DYNAMIC DOM GENERATION: UPCOMING PIPELINE CARD BLOCKS
+ */
+function renderUpcomingDishesSection() {
+    const targetGrid = document.getElementById("upcomingGrid");
+    targetGrid.innerHTML = "";
+    
+    UPCOMING_DISHES_DATABASE.forEach(item => {
+        const itemBox = document.createElement("div");
+        itemBox.className = "upcoming-card";
+        itemBox.innerHTML = `
+            <h4>${item.name}</h4>
+            <p>${item.desc}</p>
+            <span class="coming-soon-badge"><i class="fa-solid fa-flask"></i> R&D Lab Phase</span>
+        `;
+        targetGrid.appendChild(itemBox);
     });
-
-});
-
-/* ==========================================================
-   INITIAL MENU LOAD
-========================================================== */
-
-renderMenu();
-
-/* ==========================================================
-   FUTURE MENU ITEMS
-
-   PART 3B WILL ADD:
-
-   - Broast
-   - Combos
-   - Drinks
-   - Cart Logic
-   - LocalStorage
-   - Cart Drawer
-========================================================== */
-
-/* ==========================================================
-   FUTURE BUSINESS DATA MODEL
-========================================================== */
-
-const loyaltyRules = {
-
-    pointsPerSpend: 200,
-
-    pointValue: 10,
-
-    minimumRedemption: 100
-
-};
-
-const membershipTiers = {
-
-    silver: {
-
-        discount: 5,
-        loyaltyMultiplier: 1
-    },
-
-    gold: {
-
-        discount: 5,
-        loyaltyMultiplier: 2
-    },
-
-    platinum: {
-
-        discount: 10,
-        loyaltyMultiplier: 3
-    }
-
-};
-
-/* ==========================================================
-   END PART 3A
-========================================================== */
-```
-```javascript
-/* ==========================================================
-   TOUQAS FOODS
-   script.js
-   PART 3B
-
-   CART SYSTEM
-   ----------------------------------------
-   ✓ Add To Cart
-   ✓ Cart Drawer Open / Close
-   ✓ Quantity Increase
-   ✓ Quantity Decrease
-   ✓ Remove Item
-   ✓ Empty Cart
-   ✓ Live Cart Count
-   ✓ Live Cart Total
-   ✓ LocalStorage Persistence
-   ✓ Order Summary Generation
-
-   ADD BELOW PART 3A
-========================================================== */
-
-/* ==========================================================
-   CART STATE
-========================================================== */
-
-let cart = JSON.parse(
-    localStorage.getItem("touqas_cart")
-) || [];
-
-/* ==========================================================
-   CART ELEMENTS
-========================================================== */
-
-const cartDrawer =
-    document.getElementById("cartDrawer");
-
-const cartBtn =
-    document.getElementById("cartBtn");
-
-const closeCart =
-    document.getElementById("closeCart");
-
-const cartItemsContainer =
-    document.getElementById("cartItems");
-
-const cartCount =
-    document.getElementById("cartCount");
-
-const cartTotal =
-    document.getElementById("cartTotal");
-
-const checkoutBtn =
-    document.getElementById("checkoutBtn");
-
-const orderSummary =
-    document.getElementById("orderSummary");
-
-/* ==========================================================
-   OPTIONAL OVERLAY
-========================================================== */
-
-let cartOverlay =
-    document.querySelector(".cart-overlay");
-
-if (!cartOverlay) {
-
-    cartOverlay =
-        document.createElement("div");
-
-    cartOverlay.className =
-        "cart-overlay";
-
-    document.body.appendChild(
-        cartOverlay
-    );
 }
 
-/* ==========================================================
-   SAVE CART
-========================================================== */
-
-function saveCart() {
-
-    localStorage.setItem(
-        "touqas_cart",
-        JSON.stringify(cart)
-    );
-
-}
-
-/* ==========================================================
-   FIND MENU ITEM
-========================================================== */
-
-function getMenuItem(id) {
-
-    return menuItems.find(
-        item => item.id === Number(id)
-    );
-
-}
-
-/* ==========================================================
-   ADD TO CART
-========================================================== */
-
-function addToCart(id) {
-
-    const item =
-        getMenuItem(id);
-
-    if (!item) return;
-
-    const existingItem =
-        cart.find(
-            cartItem =>
-            cartItem.id === item.id
-        );
-
-    if (existingItem) {
-
-        existingItem.quantity++;
-
+/**
+ * BACKEND COMPLIANT ENGINE: STATE SYNCHRONIZATION AND BASKET MANIPULATIONS
+ */
+window.executeAddToCartRoutine = function(itemId) {
+    const matchingProduct = TOUQAS_MENU_DATABASE.find(p => p.id === itemId);
+    if (!matchingProduct) return;
+    
+    const duplicateBasketEntry = APPLICATION_SHOPPING_CART.find(entry => entry.product.id === itemId);
+    if (duplicateBasketEntry) {
+        duplicateBasketEntry.quantity += 1;
     } else {
-
-        cart.push({
-
-            id: item.id,
-            name: item.name,
-            price: item.price,
-            image: item.image,
-            quantity: 1
-
-        });
-
+        APPLICATION_SHOPPING_CART.push({ product: matchingProduct, quantity: 1 });
     }
+    
+    syncCartStateToUserInterface();
+    triggerMiniToastNotification(`${matchingProduct.name} attached to shopping basket.`);
+};
 
-    saveCart();
-
-    updateCartUI();
-
-    showToast(
-        `${item.name} added to cart`
-    );
+function modifyCartItemQuantity(itemId, adjustmentVector) {
+    const targetedEntry = APPLICATION_SHOPPING_CART.find(entry => entry.product.id === itemId);
+    if (!targetedEntry) return;
+    
+    targetedEntry.quantity += adjustmentVector;
+    if (targetedEntry.quantity <= 0) {
+        APPLICATION_SHOPPING_CART = APPLICATION_SHOPPING_CART.filter(entry => entry.product.id !== itemId);
+    }
+    
+    syncCartStateToUserInterface();
 }
 
-/* ==========================================================
-   REMOVE ITEM
-========================================================== */
+window.deleteItemEntirelyFromBasket = function(itemId) {
+    APPLICATION_SHOPPING_CART = APPLICATION_SHOPPING_CART.filter(entry => entry.product.id !== itemId);
+    syncCartStateToUserInterface();
+};
 
-function removeFromCart(id) {
-
-    cart = cart.filter(
-        item => item.id !== Number(id)
-    );
-
-    saveCart();
-
-    updateCartUI();
-
-    generateOrderSummary();
-
+/**
+ * CALCULATIONS RE-COMPILER ENGINE MATRIX
+ */
+function syncCartStateToUserInterface() {
+    // 1. Navbar Count Badges Refresh
+    const totalItemsCount = APPLICATION_SHOPPING_CART.reduce((sum, entry) => sum + entry.quantity, 0);
+    document.getElementById("cartBadge").textContent = totalItemsCount;
+    
+    // 2. Clear out container layers and loop re-inject items
+    const cartContainer = document.getElementById("cartItemsContainer");
+    cartContainer.innerHTML = "";
+    
+    let subtotalAccumulator = 0;
+    
+    APPLICATION_SHOPPING_CART.forEach(entry => {
+        const itemCostTotal = entry.product.price * entry.quantity;
+        subtotalAccumulator += itemCostTotal;
+        
+        const rowNode = document.createElement("div");
+        rowNode.className = "cart-item";
+        rowNode.innerHTML = `
+            <img src="${entry.product.img}" class="cart-item-img" onerror="this.src='https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=600&auto=format&fit=crop'">
+            <div class="cart-item-details">
+                <h4>${entry.product.name}</h4>
+                <div class="cart-item-price">PKR ${entry.product.price}</div>
+                <div class="cart-qty-controls">
+                    <button onclick="modifyCartItemQuantity('${entry.product.id}', -1)">-</button>
+                    <span>${entry.quantity}</span>
+                    <button onclick="modifyCartItemQuantity('${entry.product.id}', 1)">+</button>
+                </div>
+            </div>
+            <button class="remove-item-btn" onclick="deleteItemEntirelyFromBasket('${entry.product.id}')"><i class="fa-solid fa-trash-can"></i></button>
+        `;
+        cartContainer.appendChild(rowNode);
+    });
+    
+    if (APPLICATION_SHOPPING_CART.length === 0) {
+        cartContainer.innerHTML = `<p style='text-align:center; padding:40px; color:var(--muted-gray); font-size:13px;'>Your active basket is currently empty.</p>`;
+        document.getElementById("proceedToCheckoutBtn").disabled = true;
+    } else {
+        document.getElementById("proceedToCheckoutBtn").disabled = false;
+    }
+    
+    // Display updates variables matching numeric changes
+    document.getElementById("cartSubtotal").textContent = `PKR ${subtotalAccumulator}`;
+    
+    // Synchronize to Checkout form block spaces if visible
+    recalculateCheckoutScreenCalculations(subtotalAccumulator);
 }
 
-/* ==========================================================
-   INCREASE QTY
-========================================================== */
-
-function increaseQuantity(id) {
-
-    const item = cart.find(
-        item => item.id === Number(id)
-    );
-
-    if (!item) return;
-
-    item.quantity++;
-
-    saveCart();
-
-    updateCartUI();
-
-    generateOrderSummary();
-
+function recalculateCheckoutScreenCalculations(grossSubtotal) {
+    const listDeck = document.getElementById("summaryItemsList");
+    listDeck.innerHTML = "";
+    
+    APPLICATION_SHOPPING_CART.forEach(entry => {
+        const node = document.createElement("div");
+        node.className = "summary-row-item";
+        node.innerHTML = `<span>${entry.product.name} (x${entry.quantity})</span><span>PKR ${entry.product.price * entry.quantity}</span>`;
+        listDeck.appendChild(node);
+    });
+    
+    const delivery = grossSubtotal > 0 ? SYSTEM_CONFIG.DELIVERY_FEE_PKR : 0;
+    const finalNetPayable = grossSubtotal + delivery - ACTIVE_APPLIED_LOYALTY_DISCOUNT;
+    
+    document.getElementById("sumSubtotal").textContent = `PKR ${grossSubtotal}`;
+    document.getElementById("sumDelivery").textContent = `PKR ${delivery}`;
+    document.getElementById("sumTotal").textContent = `PKR ${finalNetPayable < 0 ? 0 : finalNetPayable}`;
 }
 
-/* ==========================================================
-   DECREASE QTY
-========================================================== */
-
-function decreaseQuantity(id) {
-
-    const item = cart.find(
-        item => item.id === Number(id)
-    );
-
-    if (!item) return;
-
-    item.quantity--;
-
-    if (item.quantity <= 0) {
-
-        removeFromCart(id);
-
+/**
+ * LOYALTY LEDGER BALANCING INTERACTION ENGINE
+ */
+function executeLoyaltyLedgerValidation() {
+    const ptsInput = document.getElementById("redeemPointsInput").value;
+    const feedback = document.getElementById("loyaltyFeedback");
+    const parsedPointsVal = parseInt(ptsInput);
+    
+    if (isNaN(parsedPointsVal) || parsedPointsVal < SYSTEM_CONFIG.LOYALTY_MIN_REDEMPTION_THRESHOLD) {
+        feedback.className = "loyalty-feedback-msg text-orange";
+        feedback.textContent = `Rejected: Minimum redemption eligibility boundary is ${SYSTEM_CONFIG.LOYALTY_MIN_REDEMPTION_THRESHOLD} points.`;
         return;
     }
-
-    saveCart();
-
-    updateCartUI();
-
-    generateOrderSummary();
-
+    
+    // Hardcoded simulation calculation for pure frontend validation structure mapping
+    ACTIVE_APPLIED_LOYALTY_DISCOUNT = parsedPointsVal * (SYSTEM_CONFIG.LOYALTY_POINT_PKR_VALUE / 10);
+    
+    feedback.className = "loyalty-feedback-msg text-success";
+    feedback.textContent = `Verified! Membership points applied successfully. Discount: PKR ${ACTIVE_APPLIED_LOYALTY_DISCOUNT}`;
+    
+    document.getElementById("loyaltyDeductionRow").classList.remove("hidden");
+    document.getElementById("sumLoyaltyDiscount").textContent = `-PKR ${ACTIVE_APPLIED_LOYALTY_DISCOUNT}`;
+    
+    // Recalculate calculations with current cart balance state tracking
+    const standardSub = APPLICATION_SHOPPING_CART.reduce((sum, entry) => sum + (entry.product.price * entry.quantity), 0);
+    recalculateCheckoutScreenCalculations(standardSub);
 }
 
-/* ==========================================================
-   EMPTY CART
-========================================================== */
-
-function emptyCart() {
-
-    cart = [];
-
-    saveCart();
-
-    updateCartUI();
-
-    generateOrderSummary();
-
-    showToast(
-        "Cart emptied"
-    );
-}
-
-/* ==========================================================
-   CALCULATE TOTAL
-========================================================== */
-
-function calculateCartTotal() {
-
-    return cart.reduce(
-
-        (total, item) =>
-
-            total +
-            item.price *
-            item.quantity,
-
-        0
-
-    );
-
-}
-
-/* ==========================================================
-   CALCULATE ITEM COUNT
-========================================================== */
-
-function calculateItemCount() {
-
-    return cart.reduce(
-
-        (total, item) =>
-
-            total +
-            item.quantity,
-
-        0
-
-    );
-
-}
-
-/* ==========================================================
-   UPDATE CART UI
-========================================================== */
-
-function updateCartUI() {
-
-    if (
-        !cartItemsContainer ||
-        !cartCount ||
-        !cartTotal
-    ) return;
-
-    cartItemsContainer.innerHTML = "";
-
-    if (cart.length === 0) {
-
-        cartItemsContainer.innerHTML = `
-
-            <div class="empty-cart">
-
-                <h3>Your Cart Is Empty</h3>
-
-                <p>
-                    Add delicious food items
-                    to get started.
-                </p>
-
-            </div>
-
-        `;
-
-    } else {
-
-        cart.forEach(item => {
-
-            cartItemsContainer.innerHTML += `
-
-                <div class="cart-item">
-
-                    <img
-                        src="${item.image}"
-                        alt="${item.name}">
-
-                    <div
-                        class="cart-item-details">
-
-                        <h4>
-                            ${item.name}
-                        </h4>
-
-                        <p>
-                            PKR ${item.price}
-                        </p>
-
-                        <div
-                         class="cart-item-controls">
-
-                            <button
-                              class="qty-btn decrease-btn"
-                              data-id="${item.id}">
-                              -
-                            </button>
-
-                            <span>
-                                ${item.quantity}
-                            </span>
-
-                            <button
-                              class="qty-btn increase-btn"
-                              data-id="${item.id}">
-                              +
-                            </button>
-
-                            <button
-                              class="remove-btn"
-                              data-id="${item.id}">
-
-                              Remove
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            `;
-        });
-
-        cartItemsContainer.innerHTML += `
-
-            <button
-                id="emptyCartBtn"
-                class="btn btn-secondary"
-                style="width:100%;margin-top:15px;">
-
-                Empty Cart
-
-            </button>
-
-        `;
-    }
-
-    cartCount.textContent =
-        calculateItemCount();
-
-    cartTotal.textContent =
-        `PKR ${calculateCartTotal()}`;
-
-    attachCartEvents();
-
-}
-
-/* ==========================================================
-   ATTACH CART EVENTS
-========================================================== */
-
-function attachCartEvents() {
-
-    document
-        .querySelectorAll(".increase-btn")
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    increaseQuantity(
-                        button.dataset.id
-                    );
-
-                }
-            );
-
-        });
-
-    document
-        .querySelectorAll(".decrease-btn")
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    decreaseQuantity(
-                        button.dataset.id
-                    );
-
-                }
-            );
-
-        });
-
-    document
-        .querySelectorAll(".remove-btn")
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    removeFromCart(
-                        button.dataset.id
-                    );
-
-                }
-            );
-
-        });
-
-    const emptyCartBtn =
-        document.getElementById(
-            "emptyCartBtn"
-        );
-
-    if (emptyCartBtn) {
-
-        emptyCartBtn.addEventListener(
-            "click",
-            emptyCart
-        );
-
-    }
-
-}
-
-/* ==========================================================
-   ADD TO CART BUTTON EVENTS
-========================================================== */
-
-function attachMenuCartButtons() {
-
-    document
-        .querySelectorAll(".add-cart-btn")
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    addToCart(
-                        button.dataset.id
-                    );
-
-                }
-            );
-
-        });
-
-}
-
-/* ==========================================================
-   PATCH RENDER MENU
-
-   IMPORTANT:
-   Call after menu rendering
-========================================================== */
-
-const originalRenderMenu =
-    renderMenu;
-
-renderMenu = function(category = "all") {
-
-    originalRenderMenu(category);
-
-    attachMenuCartButtons();
-
-};
-
-/* ==========================================================
-   RELOAD MENU WITH EVENTS
-========================================================== */
-
-renderMenu();
-
-/* ==========================================================
-   OPEN CART
-========================================================== */
-
-function openCartDrawer() {
-
-    if (!cartDrawer) return;
-
-    cartDrawer.classList.add(
-        "active"
-    );
-
-    cartOverlay.classList.add(
-        "active"
-    );
-
-}
-
-/* ==========================================================
-   CLOSE CART
-========================================================== */
-
-function closeCartDrawer() {
-
-    if (!cartDrawer) return;
-
-    cartDrawer.classList.remove(
-        "active"
-    );
-
-    cartOverlay.classList.remove(
-        "active"
-    );
-
-}
-
-/* ==========================================================
-   CART BUTTONS
-========================================================== */
-
-if (cartBtn) {
-
-    cartBtn.addEventListener(
-        "click",
-        openCartDrawer
-    );
-
-}
-
-if (closeCart) {
-
-    closeCart.addEventListener(
-        "click",
-        closeCartDrawer
-    );
-
-}
-
-cartOverlay.addEventListener(
-    "click",
-    closeCartDrawer
-);
-
-/* ==========================================================
-   ORDER SUMMARY
-========================================================== */
-
-function generateOrderSummary() {
-
-    if (!orderSummary) return;
-
-    if (cart.length === 0) {
-
-        orderSummary.innerHTML = `
-
-            <div class="order-summary-title">
-                Order Summary
-            </div>
-
-            <p>
-                No items in cart.
-            </p>
-
-        `;
-
+/**
+ * HIGH CONVERSION INTERACTIVE CHECKOUT & UNIFIED ORDER HANDLER SYSTEM
+ */
+function processingECommerceCheckoutTransmission() {
+    const formNode = document.getElementById("checkoutForm");
+    
+    // Run default validations checks on browser fields elements level
+    if (!formNode.checkValidity()) {
+        formNode.reportValidity();
         return;
     }
-
-    let html = `
-
-        <div class="order-summary-title">
-            Order Summary
-        </div>
-
-    `;
-
-    cart.forEach(item => {
-
-        html += `
-
-            <div class="summary-row">
-
-                <span>
-                    ${item.name}
-                    x ${item.quantity}
-                </span>
-
-                <span>
-                    PKR
-                    ${
-                        item.price *
-                        item.quantity
-                    }
-                </span>
-
-            </div>
-
-        `;
+    
+    // Compile inputs records variables
+    const orderDataMeta = {
+        fullName: document.getElementById("custName").value,
+        phone: document.getElementById("custPhone").value,
+        whatsapp: document.getElementById("custWhatsApp").value,
+        email: document.getElementById("custEmail").value || "N/A",
+        address: document.getElementById("custAddress").value,
+        city: document.getElementById("custCity").value,
+        orderType: document.getElementById("orderType").value,
+        notes: document.getElementById("orderNotes").value || "None",
+        paymentMethod: document.querySelector('input[name="paymentMethod"]:checked').value,
+        cartItems: APPLICATION_SHOPPING_CART,
+        grossAmount: APPLICATION_SHOPPING_CART.reduce((s, e) => s + (e.product.price * e.quantity), 0),
+        loyaltyDiscount: ACTIVE_APPLIED_LOYALTY_DISCOUNT
+    };
+    
+    orderDataMeta.finalNetPayable = orderDataMeta.grossAmount + SYSTEM_CONFIG.DELIVERY_FEE_PKR - orderDataMeta.loyaltyDiscount;
+    
+    // Generate human readable ledger receipts block strings text
+    let textReceiptTemplate = `⚡ *NEW ONLINE ORDER ORDERED - TOUQAS FOODS* ⚡\n`;
+    textReceiptTemplate += `------------------------------------\n`;
+    textReceiptTemplate += `*Client Name:* ${orderDataMeta.fullName}\n`;
+    textReceiptTemplate += `*Phone Contact:* ${orderDataMeta.phone}\n`;
+    textReceiptTemplate += `*WhatsApp Coordinates:* ${orderDataMeta.whatsapp}\n`;
+    textReceiptTemplate += `*Destination City:* ${orderDataMeta.city}\n`;
+    textReceiptTemplate += `*Address Stack:* ${orderDataMeta.address}\n`;
+    textReceiptTemplate += `*Execution Mode:* ${orderDataMeta.orderType}\n`;
+    textReceiptTemplate += `*Payment Routing:* ${orderDataMeta.paymentMethod}\n`;
+    textReceiptTemplate += `*Kitchen Instructions:* ${orderDataMeta.notes}\n\n`;
+    
+    textReceiptTemplate += `🛒 *ORDERED CULINARY MATRIX:* \n`;
+    orderDataMeta.cartItems.forEach((entry, i) => {
+        textReceiptTemplate += `${i+1}. ${entry.product.name} [x${entry.quantity}] -> PKR ${entry.product.price * entry.quantity}\n`;
     });
-
-    html += `
-
-        <div
-            class="summary-row summary-total">
-
-            <span>Total</span>
-
-            <span>
-                PKR ${calculateCartTotal()}
-            </span>
-
-        </div>
-
-    `;
-
-    orderSummary.innerHTML = html;
-
-}
-
-/* ==========================================================
-   CHECKOUT BUTTON
-========================================================== */
-
-if (checkoutBtn) {
-
-    checkoutBtn.addEventListener(
-        "click",
-        () => {
-
-            if (
-                cart.length === 0
-            ) {
-
-                showToast(
-                    "Your cart is empty"
-                );
-
-                return;
-            }
-
-            generateOrderSummary();
-
-            const checkoutModal =
-                document.getElementById(
-                    "checkoutModal"
-                );
-
-            if (
-                checkoutModal
-            ) {
-
-                checkoutModal.classList.add(
-                    "active"
-                );
-
-            }
-
-        }
-    );
-
-}
-
-/* ==========================================================
-   INITIAL LOAD
-========================================================== */
-
-updateCartUI();
-
-generateOrderSummary();
-
-/* ==========================================================
-   TOAST NOTIFICATION
-========================================================== */
-
-function showToast(message) {
-
-    let toast =
-        document.querySelector(
-            ".toast"
-        );
-
-    if (!toast) {
-
-        toast =
-            document.createElement(
-                "div"
-            );
-
-        toast.className =
-            "toast";
-
-        document.body.appendChild(
-            toast
-        );
+    
+    textReceiptTemplate += `\n------------------------------------\n`;
+    textReceiptTemplate += `*Gross Subtotal:* PKR ${orderDataMeta.grossAmount}\n`;
+    textReceiptTemplate += `*Delivery Overhead:* PKR ${SYSTEM_CONFIG.DELIVERY_FEE_PKR}\n`;
+    if(orderDataMeta.loyaltyDiscount > 0) {
+        textReceiptTemplate += `*Loyalty Applied Deduction:* -PKR ${orderDataMeta.loyaltyDiscount}\n`;
     }
+    textReceiptTemplate += `*⭐ TOTAL PAYABLE NET BALANCE:* PKR ${orderDataMeta.finalNetPayable}\n\n`;
+    textReceiptTemplate += `_Order routed securely via Touqas Core System Client UI Engine. Please confirm preparation windows._`;
 
-    toast.textContent =
-        message;
+    // OPTION A Execution Implementation: Instant secure WhatsApp routing dispatch
+    const compiledWhatsAppURL = `https://wa.me/${SYSTEM_CONFIG.WHATSAPP_PRIMARY_DESTINATION}?text=${encodeURIComponent(textReceiptTemplate)}`;
+    
+    // DEV BACKEND SYSTEMS CONNECTIONS INTEGRATION NOTICE STACK TRIGGER HOOKS
+    console.log("SYSTEM ENGINE CAPTURED COMPLETE ORDER METADATA STRUCTURE:", orderDataMeta);
+    /* ====================================================================
+       DEVELOPER BACKEND CONNECTIONS WEBHOOK HOOKS NOTE:
+       ====================================================================
+       To switch tracking execution lines into API sheets loops, wrap your calls here:
+       
+       // Option B Hook (EmailJS Integration Pipeline Line):
+       emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", orderDataMeta);
+       
+       // Option C Hook (Google Sheets Automation Apps Script Endpoints):
+       fetch("YOUR_APPS_SCRIPT_WEBHOOK_URL", { method: "POST", body: JSON.stringify(orderDataMeta) });
+       ====================================================================
+    */
 
-    toast.classList.add(
-        "show"
-    );
+    // Direct user terminal flow routing paths out execution parameters safely
+    alert("Order data generated compiled successfully! Launching safe system link transition pipeline directly into Touqas Foods core verification channel.");
+    window.open(compiledWhatsAppURL, "_blank");
+    
+    // Clear localized data variables
+    APPLICATION_SHOPPING_CART = [];
+    ACTIVE_APPLIED_LOYALTY_DISCOUNT = 0;
+    syncCartStateToUserInterface();
+    document.getElementById("checkout").classList.add("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
+/**
+ * UI HELPER INTERACTION NOTIFICATION BOX TOAST UTILITY
+ */
+function triggerMiniToastNotification(messageString) {
+    const toastNode = document.createElement("div");
+    toastNode.style.position = "fixed";
+    toastNode.style.bottom = "30px";
+    toastNode.style.left = "30px";
+    toastNode.style.backgroundColor = "var(--dark-charcoal)";
+    toastNode.style.color = "var(--bg-cream)";
+    toastNode.style.padding = "14px 24px";
+    toastNode.style.borderRadius = "8px";
+    toastNode.style.fontSize = "13px";
+    toastNode.style.fontWeight = "700";
+    toastNode.style.zIndex = "3000";
+    toastNode.style.boxShadow = "0 10px 30px rgba(0,0,0,0.3)";
+    toastNode.style.borderLeft = "4px solid var(--accent-orange)";
+    toastNode.textContent = messageString;
+    
+    document.body.appendChild(toastNode);
     setTimeout(() => {
-
-        toast.classList.remove(
-            "show"
-        );
-
+        toastNode.style.transform = "translateY(20px)";
+        toastNode.style.opacity = "0";
+        toastNode.style.transition = "all 0.4s ease";
+        setTimeout(() => toastNode.remove(), 400);
     }, 3000);
-
 }
-
-/* ==========================================================
-   FUTURE READY
-========================================================== */
-
-/*
-
-Part 3C will add:
-
-✓ Checkout Form Processing
-
-✓ WhatsApp Checkout Order
-
-✓ EmailJS Submission
-
-✓ Google Sheets Submission
-
-✓ Loyalty Points Engine
-
-✓ Membership Logic
-
-✓ Birthday Rewards
-
-✓ JazzCash Integration Structure
-
-✓ Easypaisa Integration Structure
-
-✓ Card Payment Placeholder
-
-✓ Backend API Structure
-
-✓ Admin Dashboard Ready Models
-
-*/
-
-```
-/* ==========================================================
-   TOUQAS FOODS
-   script.js
-   PART 3C
-
-   CHECKOUT + BUSINESS LOGIC
-   ----------------------------------------
-   ✓ Checkout Form Processing
-   ✓ WhatsApp Order Submission
-   ✓ EmailJS Integration Ready
-   ✓ Google Sheets Integration Ready
-   ✓ Loyalty Points System
-   ✓ Membership Logic
-   ✓ Birthday Rewards Logic
-   ✓ Payment Gateway Architecture
-   ✓ Backend Ready Data Models
-========================================================== */
-
-/* ==========================================================
-   CHECKOUT ELEMENTS
-========================================================== */
-
-const checkoutModal =
-    document.getElementById("checkoutModal");
-
-const closeCheckoutBtn =
-    document.getElementById("closeCheckout");
-
-const checkoutForm =
-    document.getElementById("checkoutForm");
-
-const placeOrderBtn =
-    document.getElementById("placeOrderBtn");
-
-/* ==========================================================
-   CLOSE CHECKOUT
-========================================================== */
-
-if (closeCheckoutBtn) {
-
-    closeCheckoutBtn.addEventListener(
-        "click",
-        () => {
-
-            checkoutModal.classList.remove(
-                "active"
-            );
-
-        }
-    );
-}
-
-window.addEventListener("click", (e) => {
-
-    if (e.target === checkoutModal) {
-
-        checkoutModal.classList.remove(
-            "active"
-        );
-
-    }
-
-});
-
-/* ==========================================================
-   CUSTOMER PROFILE MODEL
-========================================================== */
-
-/*
-   Future Database Structure
-
-   customers collection/table
-
-   {
-      id,
-      fullName,
-      phone,
-      whatsapp,
-      email,
-      address,
-      city,
-
-      membershipTier,
-
-      loyaltyPoints,
-
-      totalPointsEarned,
-
-      totalPointsRedeemed,
-
-      birthday,
-
-      birthdayRewardUsed,
-
-      monthlyDrinkUsed,
-
-      monthlyMomosUsed,
-
-      createdAt
-   }
-*/
-
-class CustomerProfile {
-
-    constructor(data) {
-
-        this.fullName =
-            data.fullName || "";
-
-        this.phone =
-            data.phone || "";
-
-        this.whatsapp =
-            data.whatsapp || "";
-
-        this.email =
-            data.email || "";
-
-        this.membershipTier =
-            data.membershipTier || "silver";
-
-        this.loyaltyPoints =
-            data.loyaltyPoints || 0;
-
-        this.totalPointsEarned =
-            data.totalPointsEarned || 0;
-
-        this.totalPointsRedeemed =
-            data.totalPointsRedeemed || 0;
-    }
-}
-
-/* ==========================================================
-   MEMBERSHIP BENEFITS
-========================================================== */
-
-const membershipBenefits = {
-
-    silver: {
-
-        cardPrice: 1200,
-
-        discount: 5,
-
-        loyaltyMultiplier: 1,
-
-        birthdayDiscount: 20
-    },
-
-    gold: {
-
-        cardPrice: 2500,
-
-        discount: 5,
-
-        loyaltyMultiplier: 2,
-
-        birthdayDiscount: 30,
-
-        monthlyFreeDrink: true
-    },
-
-    platinum: {
-
-        cardPrice: 4000,
-
-        discount: 10,
-
-        loyaltyMultiplier: 3,
-
-        birthdayDiscount: 40,
-
-        monthlyFreeDrink: true,
-
-        monthlyFreeMomos: true,
-
-        priorityService: true
-    }
-
-};
-
-/* ==========================================================
-   LOYALTY POINTS ENGINE
-========================================================== */
-
-/*
-   RULES
-
-   Spend PKR 200
-   Earn 1 Point
-
-   1 Point = PKR 10
-
-   Minimum Redemption = 100 Points
-*/
-
-function calculatePointsEarned(orderAmount) {
-
-    return Math.floor(
-        orderAmount / 200
-    );
-
-}
-
-function calculateRedeemValue(points) {
-
-    return points * 10;
-
-}
-
-function canRedeem(points) {
-
-    return points >= 100;
-
-}
-
-/* ==========================================================
-   APPLY MEMBERSHIP DISCOUNT
-========================================================== */
-
-function applyMembershipDiscount(
-    amount,
-    tier = "silver"
-) {
-
-    const discount =
-        membershipBenefits[tier]
-            ?.discount || 0;
-
-    return amount -
-        (
-            amount *
-            discount
-        ) / 100;
-}
-
-/* ==========================================================
-   BIRTHDAY REWARD CHECK
-========================================================== */
-
-function isBirthdayMonth(
-    birthdayDate
-) {
-
-    if (!birthdayDate)
-        return false;
-
-    const today =
-        new Date();
-
-    const birthday =
-        new Date(
-            birthdayDate
-        );
-
-    return (
-        today.getMonth() ===
-        birthday.getMonth()
-    );
-
-}
-
-/* ==========================================================
-   ORDER MODEL
-========================================================== */
-
-/*
-   Future Order Table
-
-   {
-      orderId,
-      customerId,
-
-      items:[ ],
-
-      subtotal,
-      discount,
-      total,
-
-      paymentMethod,
-      paymentStatus,
-
-      orderType,
-
-      loyaltyPointsEarned,
-
-      createdAt
-   }
-*/
-
-function createOrderObject(
-    formData
-) {
-
-    const subtotal =
-        calculateCartTotal();
-
-    return {
-
-        orderId:
-            "TF-" +
-            Date.now(),
-
-        business:
-            "TOUQAS FOODS",
-
-        customer: {
-
-            fullName:
-                formData.fullName,
-
-            phone:
-                formData.phone,
-
-            whatsapp:
-                formData.whatsapp,
-
-            email:
-                formData.email,
-
-            address:
-                formData.address,
-
-            city:
-                formData.city
-
-        },
-
-        orderType:
-            formData.orderType,
-
-        paymentMethod:
-            formData.paymentMethod,
-
-        notes:
-            formData.notes,
-
-        items: cart,
-
-        subtotal,
-
-        loyaltyPointsEarned:
-            calculatePointsEarned(
-                subtotal
-            ),
-
-        createdAt:
-            new Date()
-                .toISOString()
-    };
-
-}
-
-/* ==========================================================
-   WHATSAPP ORDER FORMAT
-========================================================== */
-
-function generateWhatsAppOrder(
-    order
-) {
-
-    let message =
-
-`🍔 TOUQAS FOODS ORDER
-
-Order ID:
-${order.orderId}
-
-Customer:
-${order.customer.fullName}
-
-Phone:
-${order.customer.phone}
-
-WhatsApp:
-${order.customer.whatsapp}
-
-Email:
-${order.customer.email}
-
-Address:
-${order.customer.address}
-
-City:
-${order.customer.city}
-
-Order Type:
-${order.orderType}
-
-Payment:
-${order.paymentMethod}
-
---------------------------------
-ITEMS
---------------------------------
-`;
-
-    order.items.forEach(item => {
-
-        message +=
-
-`${item.name}
-Qty: ${item.quantity}
-PKR ${item.price * item.quantity}
-
-`;
-
-    });
-
-    message +=
-
-`--------------------------------
-
-TOTAL:
-PKR ${order.subtotal}
-
-LOYALTY POINTS EARNED:
-${order.loyaltyPointsEarned}
-
-Notes:
-${order.notes || "N/A"}
-
-Thank You ❤️`;
-
-    return message;
-}
-
-/* ==========================================================
-   SEND TO WHATSAPP
-========================================================== */
-
-function sendOrderToWhatsApp(
-    order
-) {
-
-    const whatsappMessage =
-        generateWhatsAppOrder(
-            order
-        );
-
-    const whatsappURL =
-
-`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    whatsappMessage
-)}`;
-
-    window.open(
-        whatsappURL,
-        "_blank"
-    );
-}
-
-/* ==========================================================
-   EMAILJS PLACEHOLDER
-========================================================== */
-
-/*
-   STEP 1
-
-   Add EmailJS CDN
-
-   STEP 2
-
-   emailjs.init("YOUR_PUBLIC_KEY");
-
-   STEP 3
-
-   emailjs.send(
-      SERVICE_ID,
-      TEMPLATE_ID,
-      order
-   )
-
-*/
-
-function sendOrderByEmail(
-    order
-) {
-
-    console.log(
-        "EMAIL ORDER",
-        order
-    );
-
-    /*
-    emailjs.send(
-       "service_xxx",
-       "template_xxx",
-       order
-    )
-    */
-}
-
-/* ==========================================================
-   GOOGLE SHEETS PLACEHOLDER
-========================================================== */
-
-/*
-
-1. Create Google Sheet
-
-2. Create Apps Script
-
-3. Deploy As Web App
-
-4. Get Web App URL
-
-*/
-
-const GOOGLE_SHEETS_ENDPOINT =
-    "YOUR_GOOGLE_APPS_SCRIPT_URL";
-
-async function sendOrderToGoogleSheets(
-    order
-) {
-
-    try {
-
-        /*
-        await fetch(
-          GOOGLE_SHEETS_ENDPOINT,
-          {
-            method:"POST",
-            body:JSON.stringify(order)
-          }
-        );
-        */
-
-        console.log(
-            "Google Sheets Ready",
-            order
-        );
-
-    } catch (error) {
-
-        console.error(
-            error
-        );
-
-    }
-
-}
-
-/* ==========================================================
-   PAYMENT GATEWAY ARCHITECTURE
-========================================================== */
-
-/*
-
-PAYMENT METHODS
-
-1. COD
-
-2. BANK TRANSFER
-
-3. EASYPAISA
-
-4. JAZZCASH
-
-5. CARD
-
-*/
-
-/* ==========================================================
-   JAZZCASH STRUCTURE
-========================================================== */
-
-function initiateJazzCashPayment(
-    order
-) {
-
-    console.log(
-        "JazzCash API Placeholder",
-        order
-    );
-
-    /*
-       Backend Endpoint
-
-       POST
-       /api/payment/jazzcash
-
-       return paymentURL
-
-       redirect customer
-    */
-}
-
-/* ==========================================================
-   EASYPAISA STRUCTURE
-========================================================== */
-
-function initiateEasypaisaPayment(
-    order
-) {
-
-    console.log(
-        "Easypaisa API Placeholder",
-        order
-    );
-
-}
-
-/* ==========================================================
-   CARD PAYMENT STRUCTURE
-========================================================== */
-
-function initiateCardPayment(
-    order
-) {
-
-    console.log(
-        "Card Gateway Placeholder",
-        order
-    );
-
-}
-
-/* ==========================================================
-   PAYMENT SUCCESS HANDLER
-========================================================== */
-
-function handlePaymentSuccess(
-    order
-) {
-
-    console.log(
-        "Payment Success",
-        order
-    );
-
-    /*
-      update payment status
-
-      store order
-
-      award points
-
-      notify customer
-    */
-}
-
-/* ==========================================================
-   PAYMENT FAILED
-========================================================== */
-
-function handlePaymentFailure(
-    order
-) {
-
-    console.log(
-        "Payment Failed",
-        order
-    );
-
-}
-
-/* ==========================================================
-   GET FORM DATA
-========================================================== */
-
-function collectCheckoutData() {
-
-    return {
-
-        fullName:
-            document.getElementById(
-                "fullName"
-            )?.value || "",
-
-        phone:
-            document.getElementById(
-                "phone"
-            )?.value || "",
-
-        whatsapp:
-            document.getElementById(
-                "whatsapp"
-            )?.value || "",
-
-        email:
-            document.getElementById(
-                "email"
-            )?.value || "",
-
-        address:
-            document.getElementById(
-                "address"
-            )?.value || "",
-
-        city:
-            document.getElementById(
-                "city"
-            )?.value || "",
-
-        notes:
-            document.getElementById(
-                "notes"
-            )?.value || "",
-
-        orderType:
-            document.querySelector(
-                'input[name="orderType"]:checked'
-            )?.value || "Delivery",
-
-        paymentMethod:
-            document.querySelector(
-                'input[name="paymentMethod"]:checked'
-            )?.value || "COD"
-    };
-
-}
-
-/* ==========================================================
-   PLACE ORDER
-========================================================== */
-
-if (placeOrderBtn) {
-
-    placeOrderBtn.addEventListener(
-        "click",
-        async (e) => {
-
-            e.preventDefault();
-
-            if (
-                cart.length === 0
-            ) {
-
-                showToast(
-                    "Cart is empty"
-                );
-
-                return;
-            }
-
-            const formData =
-                collectCheckoutData();
-
-            if (
-                !formData.fullName ||
-                !formData.phone
-            ) {
-
-                showToast(
-                    "Please complete required fields"
-                );
-
-                return;
-            }
-
-            const order =
-                createOrderObject(
-                    formData
-                );
-
-            /* Save */
-
-            sendOrderByEmail(
-                order
-            );
-
-            sendOrderToGoogleSheets(
-                order
-            );
-
-            /* WhatsApp */
-
-            sendOrderToWhatsApp(
-                order
-            );
-
-            /* Payment Logic */
-
-            switch (
-                formData.paymentMethod
-            ) {
-
-                case "JazzCash":
-
-                    initiateJazzCashPayment(
-                        order
-                    );
-
-                    break;
-
-                case "Easypaisa":
-
-                    initiateEasypaisaPayment(
-                        order
-                    );
-
-                    break;
-
-                case "Card":
-
-                    initiateCardPayment(
-                        order
-                    );
-
-                    break;
-            }
-
-            showToast(
-                "Order Submitted Successfully"
-            );
-
-            /* Clear Cart */
-
-            cart = [];
-
-            saveCart();
-
-            updateCartUI();
-
-            generateOrderSummary();
-
-            checkoutModal.classList.remove(
-                "active"
-            );
-
-        }
-    );
-
-}
-
-/* ==========================================================
-   MEMBERSHIP CARD BUTTONS
-========================================================== */
-
-document
-    .querySelectorAll(
-        ".membership-btn"
-    )
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                window.open(
-                    "https://forms.gle/kYvsGN6gHzu9Yvcv9",
-                    "_blank"
-                );
-
-            }
-        );
-
-    });
-
-/* ==========================================================
-   MONTHLY BENEFITS MODEL
-========================================================== */
-
-/*
-Silver
-
-- 5% Discount
-- 1 Point Multiplier
-
-Gold
-
-- Monthly Free Drink
-
-Platinum
-
-- Monthly Free Drink
-- Monthly Free Momos
-- Priority Service
-
-Store In Customer Record:
-
-{
-   monthlyDrinkUsed:false,
-   monthlyMomosUsed:false,
-   birthdayRewardUsed:false
-}
-*/
-
-/* ==========================================================
-   ADMIN PANEL READY NOTES
-========================================================== */
-
-/*
-
-Future Admin Dashboard
-
-Modules:
-
-1 Orders
-
-2 Customers
-
-3 Loyalty
-
-4 Membership
-
-5 Payments
-
-6 Inventory
-
-7 Reports
-
-8 Delivery Tracking
-
-Suggested Backend:
-
-Node.js
-Express
-MongoDB
-
-OR
-
-Laravel
-MySQL
-
-OR
-
-Firebase
-
-*/
-
-/* ==========================================================
-   INVENTORY READY MODEL
-========================================================== */
-
-/*
-
-{
-   productId,
-   productName,
-   stock,
-   minimumStock,
-   category,
-   supplier
-}
-
-*/
-
-/* ==========================================================
-   SALES REPORT READY MODEL
-========================================================== */
-
-/*
-
-Daily Sales
-
-Weekly Sales
-
-Monthly Sales
-
-Top Selling Item
-
-Customer Lifetime Value
-
-Loyalty Redemption
-
-Membership Conversion
-
-*/
-
-/* ==========================================================
-   END OF TOUQAS FOODS
-   SCRIPT.JS
-========================================================== */
